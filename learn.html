@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>小满识字 - 学习</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    :root {
+      --primary: #4CAF50;
+      --primary-dark: #2E7D32;
+      --secondary: #2196F3;
+      --accent: #FF9800;
+      --light-bg: #f8fdff;
+      --card-bg: rgba(255, 255, 255, 0.95);
+      --text: #333;
+      --light-text: #666;
+      --shadow: 0 5px 20px rgba(0, 80, 150, 0.15);
+    }
+    
+    body {
+      font-family: 'Microsoft YaHei', 'Segoe UI', 'PingFang SC', sans-serif;
+      background: linear-gradient(135deg, #e0f7fa, #bbdefb);
+      min-height: 100vh;
+      padding: 20px;
+      overflow-x: hidden;
+      color: var(--text);
+    }
+    
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      border-radius: 25px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      position: relative;
+    }
+    
+    /* 头部样式 */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 25px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+      font-size: 1.3rem;
+      font-weight: bold;
+    }
+    
+    .logo i {
+      margin-right: 10px;
+      font-size: 1.5rem;
+    }
+    
+    .logo-ruby {
+      display: inline-flex;
+      align-items: center;
+      line-height: 1.3;
+    }
+    
+    .logo-ruby rt {
+      font-size: 0.7rem;
+      opacity: 0.9;
+      margin-left: 2px;
+    }
+    
+    #progress {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-weight: bold;
+      font-size: 1rem;
+    }
+    
+    /* 学习内容区域 */
+    .learning-content {
+      padding: 25px;
+      position: relative;
+    }
+    
+    /* 汉字信息区域 */
+    .character-section {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 30px;
+      margin-bottom: 20px;
+    }
+    
+    .character-info {
+      text-align: center;
+      flex: 1;
+      min-width: 300px;
+    }
+    
+    .character {
+      font-size: 7rem;
+      font-weight: bold;
+      color: var(--primary-dark);
+      margin: 15px 0;
+      text-shadow: 3px 3px 8px rgba(0,0,0,0.1);
+    }
+    
+    .pinyin {
+      font-size: 2rem;
+      color: var(--secondary);
+      margin: 10px 0;
+      font-weight: bold;
+      position: relative;
+    }
+    
+    .pinyin::before {
+      content: "拼音：";
+      font-size: 1.2rem;
+      color: var(--light-text);
+      margin-right: 8px;
+    }
+    
+    .english {
+      font-size: 1.4rem;
+      color: var(--accent);
+      margin: 10px 0 15px;
+      font-weight: 500;
+      position: relative;
+    }
+    
+    .english::before {
+      content: "英文：";
+      font-size: 1.2rem;
+      color: var(--light-text);
+      margin-right: 8px;
+    }
+    
+    /* 笔顺区域 */
+    .stroke-section {
+      flex: 1;
+      min-width: 300px;
+      background: white;
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+    }
+    
+    .section-title {
+      font-size: 1.2rem;
+      color: var(--primary);
+      margin-bottom: 15px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #f0f0f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    
+    .section-title i {
+      margin-right: 8px;
+      color: var(--accent);
+    }
+    
+    .section-title-ruby {
+      display: inline-flex;
+      align-items: center;
+      margin: 0 3px;
+    }
+    
+    .section-title-ruby rt {
+      font-size: 0.7rem;
+      opacity: 0.9;
+      margin-left: 2px;
+    }
+    
+    #stroke-container {
+      width: 100%;
+      height: 220px;
+      position: relative;
+      background: #fafafa;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid #eee;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    #stroke-svg {
+      width: 100%;
+      height: 100%;
+      position: relative;
+    }
+    
+    /* 词组区域 */
+    .phrases-section {
+      background: white;
+      border-radius: 15px;
+      padding: 20px;
+      margin: 25px 0;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+    }
+    
+    .section-title {
+      margin-bottom: 15px;
+    }
+    
+    .phrases-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 15px;
+    }
+    
+    .phrase-card {
+      background: #f9f9f9;
+      border-radius: 12px;
+      padding: 15px;
+      border-left: 3px solid var(--primary);
+    }
+    
+    .phrase {
+      font-size: 1.3rem;
+      font-weight: 500;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .phrase-ruby {
+      display: inline-flex;
+      align-items: center;
+      margin: 0 2px;
+      flex-direction: column;
+    }
+    
+    .phrase-ruby rt {
+      font-size: 0.8rem;
+      opacity: 0.8;
+      margin-left: 2px;
+    }
+    
+    .phrase-pinyin {
+      font-size: 1rem;
+      color: var(--light-text);
+      margin-bottom: 8px;
+      text-align: center;
+      font-style: italic;
+    }
+    
+    .phrase-english {
+      color: var(--light-text);
+      font-size: 1rem;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+    
+    .meaning {
+      color: var(--text);
+      font-size: 1.1rem;
+      line-height: 1.5;
+      padding-top: 12px;
+      border-top: 1px dashed #eee;
+      text-align: center;
+    }
+    
+    .meaning-ruby {
+      display: inline-flex;
+      align-items: center;
+      margin: 0 2px;
+      flex-direction: column;
+    }
+    
+    .meaning-ruby rt {
+      font-size: 0.7rem;
+      opacity: 0.8;
+      margin-left: 2px;
+    }
+    
+    .meaning-pinyin {
+      font-size: 0.9rem;
+      color: var(--light-text);
+      margin-top: 5px;
+      text-align: center;
+      font-style: italic;
+    }
+    
+    .meaning-english {
+      color: var(--light-text);
+      font-size: 0.95rem;
+      margin-top: 8px;
+      text-align: center;
+      font-style: italic;
+    }
+    
+    /* 控制按钮区域 */
+    .controls {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin: 30px 0 15px;
+    }
+    
+    .control-btn {
+      background: linear-gradient(145deg, var(--primary), var(--primary-dark));
+      color: white;
+      border: none;
+      padding: 14px 30px;
+      border-radius: 35px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      min-width: 160px;
+      text-align: center;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+      position: relative;
+      overflow: hidden;
+      font-weight: bold;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .control-btn i {
+      margin-bottom: 5px;
+      font-size: 1.2rem;
+    }
+    
+    .control-btn-text {
+      display: flex;
+      gap: 2px;
+      margin-top: 3px;
+    }
+    
+    .control-btn-text span {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .control-btn-text rt {
+      font-size: 0.7rem;
+      opacity: 0.8;
+      line-height: 1.2;
+    }
+    
+    #speak-btn {
+      background: linear-gradient(145deg, var(--secondary), #0D47A1);
+      box-shadow: 0 4px 12px rgba(33, 150, 243, 0.4);
+    }
+    
+    #prev-btn {
+      background: linear-gradient(145deg, #FF9800, #EF6C00);
+      box-shadow: 0 4px 12px rgba(255, 152, 0, 0.4);
+    }
+    
+    .control-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 18px rgba(76, 175, 80, 0.5);
+    }
+    
+    .control-btn:active {
+      transform: translateY(0);
+    }
+    
+    /* 响应式设计 */
+    @media (max-width: 768px) {
+      .character-section {
+        flex-direction: column;
+        gap: 20px;
+      }
+      
+      .character {
+        font-size: 5rem;
+      }
+      
+      .pinyin {
+        font-size: 1.6rem;
+      }
+      
+      .english {
+        font-size: 1.2rem;
+      }
+      
+      .control-btn {
+        min-width: 140px;
+        padding: 12px 20px;
+        font-size: 1rem;
+      }
+      
+      #stroke-container {
+        height: 200px;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      header {
+        padding: 12px 15px;
+      }
+      
+      .learning-content {
+        padding: 15px;
+      }
+      
+      .character {
+        font-size: 4rem;
+      }
+      
+      .control-btn {
+        width: 100%;
+        max-width: 240px;
+      }
+      
+      .controls {
+        gap: 10px;
+      }
+      
+      .phrases-container {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    /* 电视适配 */
+    @media (min-width: 1200px) {
+      .character {
+        font-size: 8rem;
+      }
+      
+      .pinyin {
+        font-size: 2.2rem;
+      }
+      
+      .english {
+        font-size: 1.6rem;
+      }
+      
+      .control-btn {
+        min-width: 180px;
+        padding: 16px 35px;
+        font-size: 1.2rem;
+      }
+      
+      .control-btn-text rt {
+        font-size: 0.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- 头部 -->
+    <header>
+      <div class="logo">
+        <i class="fas fa-book"></i>
+        <div class="logo-ruby">
+          <ruby>小<rt>xiǎo</rt></ruby>
+          <ruby>满<rt>mǎn</rt></ruby>
+          <ruby>识<rt>shí</rt></ruby>
+          <ruby>字<rt>zì</rt></ruby>
+        </div>
+      </div>
+      <div id="progress">1/40</div>
+    </header>
+    
+    <!-- 学习内容 -->
+    <div class="learning-content">
+      <!-- 汉字和笔顺区域 -->
+      <div class="character-section">
+        <div class="character-info">
+          <div class="character" id="character">字</div>
+          <div class="pinyin" id="pinyin">zì</div>
+          <div class="english" id="english">character, word</div>
+        </div>
+        
+        <div class="stroke-section">
+          <div class="section-title">
+            <i class="fas fa-pen"></i>
+            <div class="section-title-ruby">
+              <ruby>笔<rt>bǐ</rt></ruby>
+              <ruby>顺<rt>shùn</rt></ruby>
+              <ruby>动<rt>dòng</rt></ruby>
+              <ruby>画<rt>huà</rt></ruby>
+            </div>
+          </div>
+          <div id="stroke-container">
+            <svg id="stroke-svg" viewBox="0 0 100 100"></svg>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 词组区域 -->
+      <div class="phrases-section">
+        <div class="section-title">
+          <i class="fas fa-comments"></i>
+          <div class="section-title-ruby">
+            <ruby>词<rt>cí</rt></ruby>
+            <ruby>组<rt>zǔ</rt></ruby>
+            <ruby>和<rt>hé</rt></ruby>
+            <ruby>例<rt>lì</rt></ruby>
+            <ruby>句<rt>jù</rt></ruby>
+          </div>
+        </div>
+        <div class="phrases-container" id="phrases-container">
+          <!-- 词组卡片将通过JS动态生成 -->
+        </div>
+      </div>
+      
+      <!-- 控制按钮 - 优化为一排文字，文字头上备注拼音 -->
+      <div class="controls">
+        <button class="control-btn" id="speak-btn">
+          <i class="fas fa-volume-up"></i>
+          <div class="control-btn-text">
+            <span><ruby>发<rt>fā</rt></ruby></span>
+            <span><ruby>音<rt>yīn</rt></ruby></span>
+          </div>
+        </button>
+        <button class="control-btn" id="prev-btn">
+          <i class="fas fa-arrow-left"></i>
+          <div class="control-btn-text">
+            <span><ruby>上<rt>shàng</rt></ruby></span>
+            <span><ruby>一<rt>yī</rt></ruby></span>
+            <span><ruby>字<rt>zì</rt></ruby></span>
+          </div>
+        </button>
+        <button class="control-btn" id="next-btn">
+          <i class="fas fa-arrow-right"></i>
+          <div class="control-btn-text">
+            <span><ruby>下<rt>xià</rt></ruby></span>
+            <span><ruby>一<rt>yī</rt></ruby></span>
+            <span><ruby>字<rt>zì</rt></ruby></span>
+          </div>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 调用字库和语音包 -->
+  <script src="js/wordData.js"></script>
+  <script src="js/baiduTTS.js"></script>
+  
+  <script>
+    // 获取学习模式
+    const urlParams = new URLSearchParams(window.location.search);
+    const isBilingual = urlParams.get('mode') === 'bilingual';
+
+    // 学习状态
+    let currentIndex = 0;
+    let animations = [];
+
+    // 创建带拼音标注的HTML
+    function createPinyinRuby(text, pinyinStr) {
+      if (!text || !pinyinStr) return text;
+      
+      const chars = text.split('');
+      const pinyinArr = pinyinStr.split(' ');
+      
+      let rubyHtml = '';
+      for (let i = 0; i < chars.length; i++) {
+        if (i < pinyinArr.length) {
+          rubyHtml += `<ruby>${chars[i]}<rt>${pinyinArr[i]}</rt></ruby>`;
+        } else {
+          rubyHtml += chars[i];
+        }
+      }
+      return rubyHtml;
+    }
+
+    // 显示当前字
+    function showCurrentWord() {
+      const word = window.wordData[currentIndex];
+      
+      // 清除旧动画
+      animations.forEach(anim => anim.cancel());
+      animations = [];
+      
+      // 更新文本内容
+      document.getElementById('character').textContent = word.char;
+      document.getElementById('pinyin').textContent = word.pinyin;
+      document.getElementById('english').textContent = isBilingual ? word.english : '';
+      
+      // 更新进度
+      document.getElementById('progress').textContent = `${currentIndex+1}/${window.wordData.length}`;
+      
+      // 更新词组
+      const phrasesContainer = document.getElementById('phrases-container');
+      phrasesContainer.innerHTML = '';
+      
+      // 显示词组卡片（最多3个）
+      word.phrases.slice(0, 3).forEach((phrase, index) => {
+        const phraseCard = document.createElement('div');
+        phraseCard.className = 'phrase-card';
+        
+        let phraseHTML = `
+          <div class="phrase">${createPinyinRuby(phrase.text, phrase.pinyin)}</div>
+          <div class="phrase-pinyin">${phrase.pinyin}</div>
+        `;
+        
+        if (isBilingual && phrase.english) {
+          phraseHTML += `<div class="phrase-english">${phrase.english}</div>`;
+        }
+        
+        phraseCard.innerHTML = phraseHTML;
+        phrasesContainer.appendChild(phraseCard);
+      });
+      
+      // 添加例句卡片
+      if (word.meaning) {
+        const exampleCard = document.createElement('div');
+        exampleCard.className = 'phrase-card';
+        
+        let exampleHTML = `
+          <div class="meaning">${createPinyinRuby(word.meaning, word.meaningPinyin)}</div>
+          ${word.meaningPinyin ? `<div class="meaning-pinyin">${word.meaningPinyin}</div>` : ''}
+        `;
+        
+        if (isBilingual && word.meaningEn) {
+          exampleHTML += `<div class="meaning-english">${word.meaningEn}</div>`;
+        }
+        
+        exampleCard.innerHTML = exampleHTML;
+        phrasesContainer.appendChild(exampleCard);
+      }
+      
+      // 绘制笔顺
+      const svg = document.getElementById('stroke-svg');
+      svg.innerHTML = '';
+      
+      // 添加米字格背景
+      const grid = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      grid.setAttribute('d', 'M0,0 L100,0 L100,100 L0,100 Z M50,0 V100 M0,50 H100 M0,0 L100,100 M100,0 L0,100');
+      grid.setAttribute('stroke', '#f0f0f0');
+      grid.setAttribute('stroke-width', '1');
+      grid.setAttribute('fill', 'none');
+      svg.appendChild(grid);
+      
+      // 添加半透明背景字（完美居中）
+      const charBg = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      charBg.setAttribute('x', '50');
+      charBg.setAttribute('y', '50');
+      charBg.setAttribute('font-size', '80');
+      charBg.setAttribute('fill', 'rgba(0,0,0,0.05)');
+      charBg.setAttribute('text-anchor', 'middle');
+      charBg.setAttribute('dominant-baseline', 'middle'); // 垂直居中
+      charBg.setAttribute('font-family', 'Microsoft YaHei');
+      charBg.textContent = word.char;
+      svg.appendChild(charBg);
+      
+      // 分笔画绘制
+      const strokes = word.strokePath.split('M').filter(s => s.trim());
+      strokes.forEach((stroke, i) => {
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path.setAttribute('d', 'M' + stroke);
+        path.setAttribute('stroke', '#e74c3c');
+        path.setAttribute('fill', 'none');
+        path.setAttribute('stroke-width', '3');
+        path.setAttribute('stroke-linecap', 'round');
+        path.style.strokeDasharray = path.getTotalLength();
+        path.style.strokeDashoffset = path.getTotalLength();
+        svg.appendChild(path);
+        
+        // 延迟启动动画
+        setTimeout(() => {
+          const anim = path.animate([
+            { strokeDashoffset: path.getTotalLength() },
+            { strokeDashoffset: 0 }
+          ], {
+            duration: 800,
+            easing: 'cubic-bezier(0.65, 0, 0.35, 1)'
+          });
+          animations.push(anim);
+        }, i * 800);
+      });
+    }
+    
+    // 发音功能 - 使用百度语音包
+    document.getElementById('speak-btn').addEventListener('click', async () => {
+      const word = window.wordData[currentIndex];
+      try {
+        // 1. 读汉字
+        await window.speakChinese(word.char);
+        
+// 2. 读拼音（使用拼读方式）
+await new Promise(resolve => setTimeout(resolve, 800));
+
+// 如果有拼音分解数据，使用拼读方式
+if (word.split && word.split.length > 0) {
+  // 逐个拼读拼音部分
+  for (let part of word.split) {
+    await window.speakChinese(part);
+    await new Promise(resolve => setTimeout(resolve, 200)); // 部分间短暂停顿
+  }
+} else {
+  // 如果没有分解数据，正常朗读整个拼音
+  await window.speakChinese(word.pinyin);
+}
+        
+        // 3. 如果是双语模式，读英文翻译
+        if (isBilingual) {
+          await new Promise(resolve => setTimeout(resolve, 800));
+          await window.speakEnglish(word.english);
+        }
+        
+        // 4. 读词组
+        for (let i = 0; i < Math.min(3, word.phrases.length); i++) {
+  const phrase = word.phrases[i];
+  
+  // 只朗读中文词组部分
+  await new Promise(resolve => setTimeout(resolve, 800));
+  await window.speakChinese(phrase.text); // phrase.text 现在是纯中文文本
+  
+  if (isBilingual) {
+    // 只朗读英文翻译部分
+    await new Promise(resolve => setTimeout(resolve, 800));
+    await window.speakEnglish(phrase.english);
+  }
+        }
+        
+        // 5. 读例句
+        if (word.meaning) {
+          await new Promise(resolve => setTimeout(resolve, 800));
+          await window.speakChinese(word.meaning);
+          
+          if (isBilingual && word.meaningEn) {
+            await new Promise(resolve => setTimeout(resolve, 800));
+            await window.speakEnglish(word.meaningEn);
+          }
+        }
+      } catch (e) {
+        alert('请点击页面任意位置后重试');
+        console.error('朗读失败:', e);
+      }
+    });
+
+    // 翻页功能
+    function goNext() {
+      currentIndex = (currentIndex + 1) % window.wordData.length;
+      showCurrentWord();
+    }
+    
+    function goPrev() {
+      currentIndex = (currentIndex - 1 + window.wordData.length) % window.wordData.length;
+      showCurrentWord();
+    }
+    
+    document.getElementById('next-btn').addEventListener('click', goNext);
+    document.getElementById('prev-btn').addEventListener('click', goPrev);
+    
+    // 触摸滑动翻页
+    let touchStartX = 0;
+    document.addEventListener('touchstart', (e) => {
+      touchStartX = e.touches[0].clientX;
+    });
+    
+    document.addEventListener('touchend', (e) => {
+      const touchEndX = e.changedTouches[0].clientX;
+      const diff = touchEndX - touchStartX;
+      
+      if (diff > 60) { // 右滑
+        goPrev();
+      } else if (diff < -60) { // 左滑
+        goNext();
+      }
+    });
+    
+    // 键盘控制
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') goPrev();
+      if (e.key === 'ArrowRight') goNext();
+      if (e.key === ' ') document.getElementById('speak-btn').click();
+    });
+    
+    // 初始化显示
+    showCurrentWord();
+  </script>
+</body>
+</html>

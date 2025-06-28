@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>小满识字 - 儿童学习平台</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    :root {
+      --primary: #4CAF50;
+      --primary-dark: #2E7D32;
+      --secondary: #2196F3;
+      --secondary-dark: #0D47A1;
+      --accent: #FF9800;
+      --text: #333;
+      --light-bg: #f8fdff;
+      --card-bg: rgba(255, 255, 255, 0.95);
+    }
+    
+    body {
+      font-family: 'Microsoft YaHei', 'Segoe UI', 'PingFang SC', sans-serif;
+      background: linear-gradient(135deg, #e0f7fa, #bbdefb, #e0f7fa);
+      background-size: 400% 400%;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      overflow-x: hidden;
+      animation: gradientBG 15s ease infinite;
+    }
+    
+    .container {
+      max-width: 900px;
+      width: 100%;
+      background: var(--card-bg);
+      border-radius: 25px;
+      box-shadow: 0 20px 50px rgba(0, 80, 150, 0.25);
+      padding: 40px 30px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      z-index: 10;
+      margin: 30px 0;
+    }
+    
+    /* 动态背景装饰 */
+    .bg-deco {
+      position: absolute;
+      z-index: 1;
+      opacity: 0.1;
+      color: var(--primary);
+      font-size: 10rem;
+      animation: float 6s ease-in-out infinite;
+    }
+    
+    .bg-deco:nth-child(1) { top: -30px; left: 5%; animation-delay: 0s; }
+    .bg-deco:nth-child(2) { top: 20%; right: 7%; animation-delay: 1s; }
+    .bg-deco:nth-child(3) { bottom: 10%; left: 15%; animation-delay: 2s; }
+    .bg-deco:nth-child(4) { bottom: 25%; right: 5%; animation-delay: 3s; }
+    
+    /* Logo区域 */
+    .logo-container {
+      position: relative;
+      margin: 0 auto 20px;
+      width: 140px;
+      height: 140px;
+      z-index: 20;
+    }
+    
+    .logo-circle {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 10px 25px rgba(76, 175, 80, 0.5);
+      animation: pulse 3s ease-in-out infinite;
+      z-index: 22;
+    }
+    
+    .logo-icon {
+      font-size: 4.5rem;
+      color: white;
+      text-shadow: 0 3px 8px rgba(0,0,0,0.2);
+    }
+    
+    .logo-leaves {
+      position: absolute;
+      top: -20px;
+      left: -20px;
+      width: 180px;
+      height: 180px;
+      animation: rotate 25s linear infinite;
+      z-index: 21;
+    }
+    
+    .leaf {
+      position: absolute;
+      color: #8BC34A;
+      opacity: 0.8;
+      filter: drop-shadow(0 2px 3px rgba(0,0,0,0.1));
+    }
+    
+    .leaf:nth-child(1) { top: 10px; left: 30px; font-size: 2.5rem; }
+    .leaf:nth-child(2) { top: 45px; left: 0; font-size: 2rem; }
+    .leaf:nth-child(3) { top: 0; left: 60px; font-size: 2.3rem; }
+    .leaf:nth-child(4) { top: 30px; left: 75px; font-size: 1.8rem; }
+    
+    /* 标题区域 */
+    .header {
+      position: relative;
+      margin-bottom: 25px;
+      z-index: 20;
+    }
+    
+    h1 {
+      color: var(--primary);
+      font-family: 'Ma Shan Zheng', cursive;
+      font-size: 4.5rem;
+      margin: 15px 0 5px;
+      text-shadow: 0 3px 6px rgba(0,0,0,0.1);
+      letter-spacing: 3px;
+    }
+    
+    .subtitle {
+      color: var(--secondary);
+      font-size: 1.8rem;
+      font-weight: 500;
+      margin: 0 auto;
+      padding: 10px 25px;
+      background: rgba(33, 150, 243, 0.1);
+      border-radius: 50px;
+      display: inline-block;
+      position: relative;
+      max-width: 400px;
+      animation: subtitlePulse 3s ease-in-out infinite;
+    }
+    
+    .subtitle::before, .subtitle::after {
+      content: "✧";
+      position: absolute;
+      color: var(--accent);
+      font-size: 1.4rem;
+      top: 50%;
+      transform: translateY(-50%);
+      animation: twinkle 2s infinite;
+    }
+    
+    .subtitle::before {
+      left: 5px;
+      animation-delay: 0.5s;
+    }
+    
+    .subtitle::after {
+      right: 5px;
+      animation-delay: 1s;
+    }
+    
+    /* 设备提示 */
+    .device-hint {
+      margin: 15px auto 0;
+      color: #607D8B;
+      font-size: 1rem;
+      max-width: 500px;
+      padding: 10px;
+      background: rgba(255, 255, 255, 0.7);
+      border-radius: 10px;
+    }
+    
+    /* 按钮区域 */
+    .buttons-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin: 30px 0;
+      position: relative;
+      z-index: 20;
+      gap: 20px;
+    }
+    
+    .btn {
+      background: linear-gradient(145deg, var(--primary), var(--primary-dark));
+      color: white;
+      border: none;
+      padding: 20px 40px;
+      border-radius: 40px;
+      font-size: 1.3rem;
+      cursor: pointer;
+      min-width: 240px;
+      text-align: center;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 20px rgba(76, 175, 80, 0.4);
+      position: relative;
+      overflow: hidden;
+      font-weight: bold;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 25;
+    }
+    
+    .btn:nth-child(2) {
+      background: linear-gradient(145deg, var(--secondary), var(--secondary-dark));
+      box-shadow: 0 8px 20px rgba(33, 150, 243, 0.4);
+    }
+    
+    .btn i {
+      margin-right: 12px;
+      font-size: 1.5rem;
+    }
+    
+    .btn::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+      transition: 0.6s;
+    }
+    
+    .btn:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 30px rgba(76, 175, 80, 0.5);
+    }
+    
+    .btn:nth-child(2):hover {
+      box-shadow: 0 12px 30px rgba(33, 150, 243, 0.5);
+    }
+    
+    .btn:hover::after {
+      left: 100%;
+    }
+    
+    .btn:active {
+      transform: translateY(0);
+    }
+    
+    /* 设备展示 */
+    .devices-showcase {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 30px;
+      margin: 30px 0;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.7);
+      border-radius: 20px;
+    }
+    
+    .device {
+      text-align: center;
+      padding: 15px;
+      min-width: 120px;
+    }
+    
+    .device i {
+      font-size: 3.5rem;
+      color: var(--secondary);
+      margin-bottom: 10px;
+    }
+    
+    .device p {
+      font-weight: bold;
+      color: var(--text);
+    }
+    
+    /* 页脚 */
+    footer {
+      margin-top: 30px;
+      color: #607D8B;
+      font-size: 1rem;
+      text-align: center;
+      padding: 15px;
+      background: rgba(255, 255, 255, 0.6);
+      border-radius: 15px;
+    }
+    
+    /* 动画定义 */
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(5deg); }
+    }
+    
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); box-shadow: 0 10px 25px rgba(76, 175, 80, 0.5); }
+      50% { transform: scale(1.05); box-shadow: 0 15px 35px rgba(76, 175, 80, 0.6); }
+    }
+    
+    @keyframes subtitlePulse {
+      0%, 100% { transform: scale(1); box-shadow: 0 4px 15px rgba(33, 150, 243, 0.15); }
+      50% { transform: scale(1.02); box-shadow: 0 6px 20px rgba(33, 150, 243, 0.2); }
+    }
+    
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.6; transform: translateY(-50%) scale(1); }
+      50% { opacity: 1; transform: translateY(-50%) scale(1.3); }
+    }
+    
+    /* 响应式设计 - 适配所有设备 */
+    @media (max-width: 768px) {
+      .container {
+        padding: 30px 20px;
+        margin: 20px 10px;
+      }
+      
+      h1 {
+        font-size: 3.5rem;
+      }
+      
+      .subtitle {
+        font-size: 1.5rem;
+        max-width: 320px;
+        padding: 8px 20px;
+      }
+      
+      .btn {
+        min-width: 220px;
+        padding: 18px 30px;
+        font-size: 1.2rem;
+      }
+      
+      .logo-container {
+        width: 120px;
+        height: 120px;
+      }
+      
+      .logo-icon {
+        font-size: 4rem;
+      }
+      
+      .logo-leaves {
+        width: 160px;
+        height: 160px;
+        top: -20px;
+        left: -20px;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 3rem;
+      }
+      
+      .subtitle {
+        font-size: 1.3rem;
+        max-width: 280px;
+      }
+      
+      .btn {
+        min-width: 90%;
+        max-width: 300px;
+        padding: 16px 25px;
+        font-size: 1.1rem;
+      }
+      
+      .buttons-container {
+        gap: 15px;
+      }
+      
+      .device-hint {
+        font-size: 0.9rem;
+      }
+      
+      .devices-showcase {
+        gap: 15px;
+      }
+      
+      .device i {
+        font-size: 2.8rem;
+      }
+    }
+    
+    /* 电视适配 */
+    @media (min-width: 1200px) {
+      .container {
+        max-width: 1000px;
+        padding: 50px 40px;
+      }
+      
+      h1 {
+        font-size: 5rem;
+      }
+      
+      .subtitle {
+        font-size: 2.2rem;
+        max-width: 500px;
+      }
+      
+      .btn {
+        font-size: 1.5rem;
+        min-width: 280px;
+        padding: 25px 45px;
+      }
+      
+      .logo-container {
+        width: 180px;
+        height: 180px;
+      }
+      
+      .logo-icon {
+        font-size: 5.5rem;
+      }
+      
+      .logo-leaves {
+        width: 220px;
+        height: 220px;
+        top: -30px;
+        left: -30px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- 动态背景装饰 -->
+  <div class="bg-deco">书</div>
+  <div class="bg-deco">读</div>
+  <div class="bg-deco">学</div>
+  <div class="bg-deco">习</div>
+  
+  <div class="container">
+    <!-- Logo区域 -->
+    <div class="logo-container">
+      <div class="logo-leaves">
+        <div class="leaf"><i class="fas fa-leaf"></i></div>
+        <div class="leaf"><i class="fas fa-leaf"></i></div>
+        <div class="leaf"><i class="fas fa-leaf"></i></div>
+        <div class="leaf"><i class="fas fa-leaf"></i></div>
+      </div>
+      <div class="logo-circle">
+        <i class="fas fa-book-open logo-icon"></i>
+      </div>
+    </div>
+    
+    <!-- 标题区域 -->
+    <div class="header">
+      <h1>小满识字</h1>
+      <div class="subtitle">好好学习，天天向上</div>
+      
+      <div class="device-hint">
+        本平台可在手机、平板、电脑和电视上使用，自动适配您的设备
+      </div>
+    </div>
+    
+    <!-- 按钮区域 -->
+    <div class="buttons-container">
+      <button class="btn" onclick="location.href='learn.html?mode=chinese'">
+        <i class="fas fa-book"></i> 中文学习
+      </button>
+      <button class="btn" onclick="location.href='learn.html?mode=bilingual'">
+        <i class="fas fa-language"></i> 中英双语
+      </button>
+    </div>
+    
+    <!-- 设备支持展示 -->
+    <div class="devices-showcase">
+      <div class="device">
+        <i class="fas fa-mobile-alt"></i>
+        <p>手机</p>
+      </div>
+      <div class="device">
+        <i class="fas fa-tablet-alt"></i>
+        <p>平板</p>
+      </div>
+      <div class="device">
+        <i class="fas fa-laptop"></i>
+        <p>电脑</p>
+      </div>
+      <div class="device">
+        <i class="fas fa-tv"></i>
+        <p>电视</p>
+      </div>
+    </div>
+    
+    <!-- 页脚 -->
+    <footer>
+      <p>© 2023 小满识字 - 让学习充满乐趣 | 多端适配学习平台</p>
+      <p>支持手机、平板、电脑和智能电视访问</p>
+    </footer>
+  </div>
+  
+  <script>
+    // 添加页面加载动画
+    document.addEventListener('DOMContentLoaded', function() {
+      const elements = [
+        document.querySelector('.logo-container'),
+        document.querySelector('h1'),
+        document.querySelector('.subtitle'),
+        ...document.querySelectorAll('.btn'),
+        document.querySelector('.devices-showcase'),
+        document.querySelector('footer')
+      ];
+      
+      elements.forEach((el, index) => {
+        if(el) {
+          el.style.opacity = '0';
+          el.style.transform = 'translateY(30px)';
+          
+          setTimeout(() => {
+            el.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+            el.style.opacity = '1';
+            el.style.transform = 'translateY(0)';
+          }, 300 + (index * 150));
+        }
+      });
+    });
+  </script>
+</body>
+</html>
